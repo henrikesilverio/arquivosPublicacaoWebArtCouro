@@ -1,0 +1,231 @@
+﻿.smart-form .field-validation-error {
+    display: block;
+    margin-top: 1px;
+    padding: 0 1px;
+    font-style: normal;
+    font-size: 11px;
+    line-height: 15px;
+    color: #D56161;
+}
+
+.smart-form footer .btn {
+    display: inline-block !important;
+    margin-bottom: 0 !important;
+    font-weight: 400 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    background-image: none !important;
+    border: 1px solid transparent !important;
+    white-space: nowrap !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    line-height: 1.42857143 !important;
+    border-radius: 2px !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.smart-form footer .btn-labeled {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.smart-form footer .demo-btns {
+    float: right;
+}
+
+#AlertaMensagens {
+    z-index: 1;
+}
+
+#footerPrincipal {
+    background-color: #474544;
+    color: #fff;
+    text-align: center;
+    clear: both;
+    position: absolute;
+    z-index: 10;
+    height: 52px;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+
+.editable-buttons {
+    margin: 0 !important;
+}
+
+    .editable-buttons button {
+        margin-left: 6px !important;
+    }
+
+    .editable-buttons a {
+        margin-left: 6px !important;
+    }
+
+.center {
+    text-align: center;
+}
+
+.smart-form fieldset {
+    padding: 25px 14px 14px !important;
+}
+
+.div-loading {
+    z-index: 1051;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #D8D8D8;
+    -ms-opacity: 0.8;
+    opacity: 0.8;
+    margin-left: 220px;
+    margin-top: 89px;
+    padding: 0;
+    padding-bottom: 52px;
+    min-height: 500px;
+}
+
+    .div-loading span {
+        margin: 0;
+        font-size: 26px;
+        top: 40%;
+        position: absolute;
+        left: 40%;
+    }
+
+.select2-container {
+    width: 100%;
+}
+
+.select2-hidden-accessible {
+    display: none;
+}
+
+.select2-container-multi .select2-search-choice-close {
+    padding: 1px 4px 1px 6px !important;
+}
+
+.select2-search-choice-close {
+    min-height: 0 !important;
+    -moz-min-width: 0 !important;
+    -ms-min-width: 0 !important;
+    -o-min-width: 0 !important;
+    -webkit-min-width: 0 !important;
+    min-width: 0 !important;
+    font-size: 18px !important;
+}
+
+.text-transform-uppercase {
+    text-transform: uppercase;
+}
+
+.select2-container .select2-choice abbr {
+    right: 41px !important;
+    top: 8px !important;
+}
+
+.ScrollWidgetTable div[role='content'] {
+    overflow: auto;
+}
+
+.ScrollWidgetTable .widget-body {
+    -moz-min-width: 1000px;
+    -ms-min-width: 1000px;
+    -o-min-width: 1000px;
+    -webkit-min-width: 1000px;
+    min-width: 1000px;
+}
+
+.page-err {
+    width: 100%;
+    height: 100%;
+    background-color: #1f8dd1;
+}
+
+    .page-err .err-status {
+        background-color: #f3f3f3;
+    }
+
+        .page-err .err-status h1 {
+            margin: 5px 0 -30px;
+            color: #1C7EBB;
+            font-size: 200px;
+        }
+
+    .page-err .err-message {
+        background-color: #1C7EBB;
+        padding: 24px;
+        text-transform: uppercase;
+    }
+
+        .page-err .err-message h2 {
+            font-size: 50px;
+            color: #fff;
+            font-weight: 300;
+        }
+
+    .page-err .err-body {
+        padding: 100px 10px 20px;
+    }
+
+    .page-err .btn-goback {
+        color: #fff;
+        background-color: transparent;
+        border-color: #fff;
+    }
+
+#content-authorize {
+    z-index: 2;
+    top: 0;
+    left: 0;
+}
+
+.modal-footer {
+    background-color: #F1F0F0 !important;
+    padding: 10px !important;
+}
+
+.modal-header {
+    border-color: #45474b !important;
+    background: #4c4f53 !important;
+    color: #fff !important;
+}
+
+    .modal-header button.close {
+        font-size: 27.5px !important;
+        color: #fff !important;
+        -ms-opacity: 0.5 !important;
+        opacity: 0.5 !important;
+    }
+
+        .modal-header button.close:focus, button.close:hover {
+            -ms-opacity: 1 !important;
+            opacity: 1 !important;
+        }
+
+.no-padding .widget-body-toolbar {
+    display: block;
+    margin: 0;
+}
+
+textarea#description {
+    -moz-resize: none;
+    -ms-resize: none;
+    -o-resize: none;
+    resize: none;
+}
+
+.fc-event button {
+    font-size: 27.5px !important;
+    color: #fff !important;
+    -ms-opacity: 0.5 !important;
+    opacity: 0.5 !important;
+    padding-right: 4px !important;
+}

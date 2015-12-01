@@ -1,0 +1,144 @@
+﻿@model ProjetoArtCouro.Model.Models.Funcionario.PesquisaFuncionarioModel
+@using ProjetoArtCouro.Resource.Resources
+
+
+<div class="jarviswidget jarviswidget-sortable"
+     data-widget-editbutton="true" data-widget-colorbutton="true"
+     data-widget-fullscreenbutton="true" data-widget-collapsed="true"
+     data-widget-custombutton="true" data-widget-togglebutton="true"
+     data-widget-sortable="true" data-widget-deletebutton="true" role="widget" style="">
+    <header role="heading">
+        <span class="widget-icon"><i class="fa fa-edit"></i></span>
+        <h2>@Mensagens.SearchEmployee </h2>
+        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+    </header>
+    <div role="content">
+        <div id="AlertaMensagens" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding"></div>
+        <div class="widget-body no-padding">
+            <form id="formPesquisaFuncionario" class="smart-form" novalidate="novalidate">
+                <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <section class="col col-xs-12 col-sm-8 col-md-8 col-lg-7">
+                            @Html.LabelFor(m => m.Nome, new { @class = "label" })
+                            <label class="input">
+                                @Html.TextBoxFor(m => m.Nome, new { placeholder = @Mensagens.Name })
+                            </label>
+                        </section>
+                        <section class="col col-xs-12 col-sm-4 col-md-4 col-lg-5">
+                            @Html.LabelFor(m => m.CPFCNPJ, new { @class = "label" })
+                            <label class="input">
+                                @Html.TextBoxFor(m => m.CPFCNPJ, new { placeholder = @Mensagens.CPFCNPJ, MaxLength = "18", @class = "CpfCnpjMask" })
+                            </label>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(m => m.Email, new { @class = "label" })
+                            <label class="input">
+                                @Html.TextBoxFor(m => m.Email, new { placeholder = @Mensagens.Email })
+                            </label>
+                        </section>
+                        <section class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(m => m.CodigoFuncionario, new {@class = "label"})
+                            <label class="input">
+                                @Html.TextBoxFor(m => m.CodigoFuncionario, new {placeholder = @Mensagens.Code})
+                            </label>
+                        </section>
+                        <section class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(m => m.EPessoaFisica, new { @class = "labe" })
+                            <div class="inline-group">
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.EPessoaFisica, true, new { @class = "TipoPessoa" })
+                                    <i></i>@Mensagens.PhysicalPerson
+                                </label>
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.EPessoaFisica, false, new { @class = "TipoPessoa" })
+                                    <i></i>@Mensagens.LegalPerson
+                                </label>
+                            </div>
+                        </section>
+                    </div>
+                </fieldset>
+                <footer>
+                    <a id="PesquisarFuncionario" class="btn btn-primary" href="javascript:void(0);">
+                        <i class="fa fa-search"></i> @Mensagens.Research
+                    </a>
+                    <a id="NovoFuncionario" class="btn btn-success" href="@Url.Action("NovoFuncionario", "Funcionario")">
+                        <i class="fa fa-file-o"></i> @Mensagens.New
+                    </a>
+                </footer>
+            </form>
+            <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 WidgetFuncionario ScrollWidgetTable">
+                <div class="jarviswidget jarviswidget-color-blueDark" data-widget-fullscreenbutton="false"
+                     data-widget-colorbutton="false" data-widget-togglebutton="false"
+                     data-widget-deletebutton="false" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                        <h2>Tabela de Funcionario</h2>
+                    </header>
+                    <div>
+                        <div class="widget-body no-padding">
+                            <table id="datatableFuncionario" class="table table-striped table-bordered table-hover" width="100%"></table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/app/Search.js"></script>
+    <script>
+        Portal.Mask();
+        Portal.Form({
+            Button: $("#Salvar"),
+            Form: $("#smart-form-register")
+        });
+        Portal.Search({
+            AlertaMensagensSeletor: "#AlertaMensagens",
+            BotaoPesquisarSeletor: "#PesquisarFuncionario",
+            FormularioSeletor: "#formPesquisaFuncionario",
+            UrlDados: "@Url.Action("PesquisaFuncionario", "Funcionario")",
+            TabelaSeletor: "#datatableFuncionario",
+            WidgetSeletor: ".WidgetFuncionario",
+            TituloRodape: "Funcionários",
+            InformacaoTabela: "Informe os filtros para pesquisar",
+            TituloRodapeContador: "Nenhum funcionário",
+            OrdenacaoDoCabecalho: [
+                { "sTitle": "@(Mensagens.Code)", "mData": "Codigo", "sWidth": "10%" },
+                { "sTitle": "@(Mensagens.Name)", "mData": "Nome", "sWidth": "40%" },
+                {
+                    "sTitle": "@(Mensagens.CPFCNPJ)",
+                    "mData": null,
+                    "sWidth": "20%",
+                    "mRender": function (obj) {
+                        return obj.CPF != null && obj.CPF !== "" ? obj.CPF : obj.CNPJ;
+                    }
+                },
+                {
+                    "sTitle": "@(Mensagens.Email)",
+                    "mData": null,
+                    "sWidth": "20%",
+                    "mRender": function (obj) {
+                        return obj.MeioComunicacao.Email === null || "" ? "N/I" : obj.MeioComunicacao.Email;
+                    }
+                },
+                {
+                    "sTitle": "@(Mensagens.Actions)",
+                    "mData": null,
+                    "sClass": "center",
+                    "bSortable": false,
+                    "sWidth": "10%",
+                    "mRender": function (obj) {
+                        var url = "/Funcionario/EditarFuncionario" + "?codigoFuncionario=" + obj.Codigo;
+                        var botoes = Portal.CriarBotoes(url,
+                                "Portal.RequisicaoDeletarLinha(\"/Funcionario/ExcluirFuncionario\",{codigoFuncionario:" + obj.Codigo + "}, \"#datatableFuncionario\", $(this).closest(\"tr\"))");
+                        return botoes[0].outerHTML;
+                    }
+                }
+            ]
+        });
+        $(".TipoPessoa[value=\"True\"]")[0].checked = true;
+    </script>
+}

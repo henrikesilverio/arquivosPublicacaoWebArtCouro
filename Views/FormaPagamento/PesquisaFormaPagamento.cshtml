@@ -1,0 +1,132 @@
+﻿@model ProjetoArtCouro.Model.Models.FormaPagamento.FormaPagamentoModel
+@using ProjetoArtCouro.Resource.Resources
+
+
+<div class="jarviswidget jarviswidget-sortable"
+     data-widget-editbutton="true" data-widget-colorbutton="true"
+     data-widget-fullscreenbutton="true" data-widget-collapsed="true"
+     data-widget-custombutton="true" data-widget-togglebutton="true"
+     data-widget-sortable="true" data-widget-deletebutton="true" role="widget" style="">
+    <header role="heading">
+        <span class="widget-icon"><i class="fa fa-edit"></i></span>
+        <h2>@Mensagens.FormOfPayment </h2>
+        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+    </header>
+    <div role="content">
+        <div id="AlertaMensagens" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding"></div>
+        <div class="widget-body no-padding">
+            <form id="formFormaPagamento" class="smart-form" novalidate="novalidate">
+                <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <section class="col col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                            @Html.LabelFor(m => m.Descricao, new { @class = "label" })
+                            <label class="input">
+                                @Html.TextBoxFor(m => m.Descricao, new { placeholder = @Mensagens.Description })
+                            </label>
+                        </section>
+                        <section class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                            @Html.LabelFor(m => m.Ativo, new { @class = "label" })
+                            <div class="inline-group">
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.Ativo, true, new { data_text = @Mensagens.Yes })
+                                    <i></i>@Mensagens.Yes
+                                </label>
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.Ativo, false, new { data_text = @Mensagens.Not })
+                                    <i></i>@Mensagens.Not
+                                </label>
+                            </div>
+                        </section>
+                    </div>
+                </fieldset>
+                <footer>
+                    <a id="AdicionarFormaPagamento" class="btn btn-primary" href="javascript:void(0);">
+                        <i class="fa fa-floppy-o"></i> @Mensagens.Save
+                    </a>
+                </footer>
+            </form>
+            <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 WidgetFormaPagamento ScrollWidgetTable">
+                <div class="jarviswidget jarviswidget-color-blueDark" data-widget-fullscreenbutton="false"
+                     data-widget-colorbutton="false" data-widget-togglebutton="false"
+                     data-widget-deletebutton="false" data-widget-editbutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                        <h2>Tabela de Formas de Pagamento</h2>
+                    </header>
+                    <div>
+                        <div class="widget-body no-padding">
+                            <table id="datatableFormaPagamento" class="table table-striped table-bordered table-hover" width="100%"></table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/app/Search.js"></script>
+    <script>
+        Portal.Mask();
+        Portal.Form({
+            Button: $("#Salvar"),
+            Form: $("#smart-form-register")
+        });
+        Portal.TabelaDinamica({
+            AdicionaLinhaSeletor: "#AdicionarFormaPagamento",
+            TabelaSeletor: "#datatableFormaPagamento",
+            TituloRodape: "Condição de Pagamento",
+            TituloRodapeContador: "Nenhuma condição de pagamento",
+            InformacaoTabela: "Adicione novas condição de pagamento",
+            BotaoEditarSeletor: ".EditarFormaPagamento",
+            BotaoExcluirSeletor: ".ExcluirFormaPagamento",
+            $Formulario: $("#formFormaPagamento"),
+            UrlLista: "@Url.Action("ObterListaFormaPagamento", "FormaPagamento")",
+            UrlCriar: "@Url.Action("NovaFormaPagamento", "FormaPagamento")",
+            OrdenacaoDoCabecalho: [
+                { "sTitle": "@(Mensagens.Code)", "mData": "FormaPagamentoCodigo", "sWidth": "10%" },
+                { "sTitle": "@(Mensagens.Description)", "mData": "Descricao", "sWidth": "65%" },
+                {
+                    "sTitle": "@(Mensagens.Active)",
+                    "mData": null,
+                    "sWidth": "15%",
+                    "mRender": function (obj) {
+                        return obj.Ativo ? "Sim" : "Não";
+                    }
+                },
+                {
+                    "sTitle": "@(Mensagens.Actions)",
+                    "mData": null,
+                    "sClass": "center",
+                    "sWidth": "10%",
+                    "bSortable": false,
+                    "mRender": function (obj) {
+                        var settings = JSON.stringify({
+                            "objetoAdicional": { "name": "FormaPagamentoCodigo", "value": obj.FormaPagamentoCodigo },
+                            "objetoExcluir": { "codigoFormaPagamento": obj.FormaPagamentoCodigo },
+                            "urlEditar": "/FormaPagamento/EditarFormaPagamento",
+                            "urlExcluir": "/FormaPagamento/ExcluirFormaPagamento",
+                            "seletorTabela": "#datatableFormaPagamento",
+                            "seletorBotaoModalAtualizar": "#AtualizarFormaPagamento",
+                            "seletorFormulario": "#formModalFormaPagamento",
+                            "seletorModal": "#modalFormaPagamento"
+                        });
+                        var botoes = Portal.CriarBotoesTabelaDinamica(
+                            "Portal.EditarItemTabelaDinamica(this, " + settings + ")",
+                            "Portal.ExcluirItemTabelaDinamica(this, " + settings + ")",
+                            "#modalFormaPagamento");
+                        return botoes[0].outerHTML;
+                    }
+                }
+            ]
+        });
+        Portal.LimparCampos = function () {
+            $("#Descricao").val("");
+            $("#Ativo").closest(".inline-group").find(":checked")[0].checked = false;
+        }
+        Portal.PreencherCamposModal = function (obj) {
+            $("#ModalFormaPagamentoDescricao").val(obj["Descricao"]);
+            $("#ModalFormaPagamentoAtivo").closest(".inline-group").find("input[value=" + obj["Ativo"].toString().capitalize() + "]")[0].checked = true;
+        }
+    </script>
+}

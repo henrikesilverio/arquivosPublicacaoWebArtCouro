@@ -1,0 +1,143 @@
+﻿@using ProjetoArtCouro.Resource.Resources
+
+<aside id="left-panel">
+    <div class="login-info">
+        <span>
+        </span>
+    </div>
+    <nav>
+        <ul>
+            <li>
+                <a href="/" title="Home">
+                    <i class="fa fa-lg fa-fw fa-home"></i>
+                    <span class="menu-item-parent">@Mensagens.Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0)">
+                    <i class="fa fa-lg fa-fw fa-bar-chart-o"></i>
+                    <span class="menu-item-parent">@Mensagens.Register</span>
+                </a>
+                <ul>
+                    <li>
+                        <a href="javascript:void(0)">@Mensagens.Person</a>
+                        <ul>
+                            @if (User.IsInRole("PesquisaCliente"))
+                            {
+                                <li>
+                                    @Html.ActionLink(Mensagens.Client, "PesquisaCliente", "Cliente")
+                                </li>
+                            }
+                            @if (User.IsInRole("PesquisaFornecedor"))
+                            {
+                                <li>
+                                    @Html.ActionLink(Mensagens.Provider, "PesquisaFornecedor", "Fornecedor")
+                                </li>
+                            }
+                            @if (User.IsInRole("PesquisaFuncionario"))
+                            {
+                                <li>
+                                    @Html.ActionLink(Mensagens.Employee, "PesquisaFuncionario", "Funcionario")
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    @if (User.IsInRole("PesquisaProduto"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.Product, "PesquisaProduto", "Produto")
+                        </li>
+                    }
+                    @if (User.IsInRole("PesquisaFormaPagamento"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.FormOfPayment, "PesquisaFormaPagamento", "FormaPagamento")
+                        </li>
+                    }
+                    @if (User.IsInRole("PesquisaCondicaoPagamento"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.PaymentTerms, "PesquisaCondicaoPagamento", "CondicaoPagamento")
+                        </li>
+                    }
+                    @if (User.IsInRole("PesquisaUsuario"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.Users, "PesquisaUsuario", "Usuario")
+                        </li>
+                    }
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:void(0)">
+                    <i class="fa fa-lg fa-fw fa-table"></i>
+                    <span class="menu-item-parent">@Mensagens.Operations</span>
+                </a>
+                <ul>
+                    @if (User.IsInRole("PesquisaCompra"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.Buy, "PesquisaCompra", "Compra")
+                        </li>
+                    }
+                    @if (User.IsInRole("PesquisaVenda"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.Sale, "PesquisaVenda", "Venda")
+                        </li>
+                    }
+                    @if (User.IsInRole("PesquisaContaPagar"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.AccountsPayable, "PesquisaContaPagar", "ContaPagar")
+                        </li>
+                    }
+                    @if (User.IsInRole("PesquisaContaReceber"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.AccountsReceivable, "PesquisaContaReceber", "ContaReceber")
+                        </li>
+                    }
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:void(0)">
+                    <i class="fa fa-lg fa-fw fa-pencil-square-o"></i>
+                    <span class="menu-item-parent">@Mensagens.Report</span>
+                </a>
+                <ul>
+                    <li>
+                        <a href="javascript:void(0)">@Mensagens.Stock</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:void(0)">
+                    <i class="fa fa-lg fa-fw fa-calendar"></i>
+                    <span class="menu-item-parent">@Mensagens.Information</span>
+                </a>
+                <ul>
+                    @if (User.IsInRole("PesquisaGrupo"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.GroupSettings, "PesquisaGrupo", "Configuracao")
+                        </li>
+                    }
+                    @if (User.IsInRole("ConfiguracaoUsuario"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.SettingsForUsers, "ConfiguracaoUsuario", "Configuracao")
+                        </li>
+                    }
+                    @if (User.IsInRole("AlterarSenha"))
+                    {
+                        <li>
+                            @Html.ActionLink(Mensagens.ChangePassword, "AlterarSenha", "Usuario")
+                        </li>
+                    }
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <span class="minifyme" data-action="minifyMenu"><i class="fa fa-arrow-circle-left hit"></i></span>
+</aside>
