@@ -41,6 +41,8 @@
                 "sInfo": "_START_ a _END_ em _TOTAL_ " + settings.TituloRodape,
                 "sInfoEmpty": settings.TituloRodapeContador,
                 "sEmptyTable": settings.InformacaoTabela,
+                "sInfoFiltered": "",
+                "sZeroRecords": "Não há registros para o filtro informado",
                 "oPaginate": {
                     "sFirst": "<<",
                     "sLast": ">>",
@@ -58,13 +60,13 @@
             $(listaCampos).each(function() {
                 if (this.value === "" && this.type !== "checkbox") {
                     contador++;
-                } else if (this.type === "checkbox" && !this.checked) {
+                } else if ((this.type === "checkbox" || this.type === "radio") && !this.checked) {
                     contador++;
                 }
             });
 
             if (listaCampos.length === contador) {
-                Portal.PreencherAlertaErros("Preencha pelo menos um campo", "#AlertaMensagens");
+                Portal.PreencherAlertaErros("Preencha pelo menos um campo", "#AlertaMensagens", true);
                 return;
             }
 
@@ -78,15 +80,15 @@
                 }).success(function(ret) {
                     tableSettings.fnClearTable();
                     if (ret.TemErros) {
-                        Portal.PreencherAlertaErros(ret.Mensagem, "#AlertaMensagens");
+                        Portal.PreencherAlertaErros(ret.Mensagem, "#AlertaMensagens", true);
                     } else if (ret.ObjetoRetorno.length === 0) {
-                        Portal.PreencherAlertaAtencao(ret.Mensagem, "#AlertaMensagens");
+                        Portal.PreencherAlertaAtencao(ret.Mensagem, "#AlertaMensagens", true);
                     } else if (ret.ObjetoRetorno.length > 0) {
                         Portal.LimparAlertar("#AlertaMensagens");
                         tableSettings.fnAddData(ret.ObjetoRetorno);
                     }
                 }).error(function(ex) {
-                    Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens");
+                    Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens", true);
                 });
             }
         });
@@ -99,15 +101,15 @@
             traditional: true
         }).success(function(ret) {
             if (ret.TemErros) {
-                Portal.PreencherAlertaErros(ret.Mensagem, "#AlertaMensagens");
+                Portal.PreencherAlertaErros(ret.Mensagem, "#AlertaMensagens", true);
             } else {
                 Portal.LimparAlertar("#AlertaMensagens");
-                Portal.PreencherAlertaSucesso(ret.Mensagem, "#AlertaMensagens");
+                Portal.PreencherAlertaSucesso(ret.Mensagem, "#AlertaMensagens", true);
                 var tabela = $(tabelaSeletor).dataTable();
                 tabela.fnDeleteRow(tr);
             }
         }).error(function(ex) {
-            Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens");
+            Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens", true);
         });
     },
     CriarBotoes: function(urlEditar, funcaoExcluir) {
@@ -161,7 +163,7 @@
         div.append(botaoExcluir);
         return div;
     },
-    TabelaDinamica: function(settings) {
+    EstruturaTabelaDinamica: function (settings) {
         var tabela = $(settings.TabelaSeletor).dataTable({
             "autoWidth": true,
             "iDisplayLength": 10,
@@ -172,6 +174,8 @@
                 "sInfo": "_START_ a _END_ em _TOTAL_ " + settings.TituloRodape,
                 "sInfoEmpty": settings.TituloRodapeContador,
                 "sEmptyTable": settings.InformacaoTabela,
+                "sInfoFiltered": "",
+                "sZeroRecords": "Não há registros para o filtro informado",
                 "oPaginate": {
                     "sFirst": "<<",
                     "sLast": ">>",
@@ -180,24 +184,71 @@
                 }
             }
         });
+        return tabela;
+    },
+    TabelaItemProduto: function (settings) {
+        var tabela = Portal.EstruturaTabelaDinamica(settings);
+        $(settings.AdicionaLinhaSeletor).on("click", function () {
+            Portal.AdicionarItemProdutoTabela(settings, tabela);
+        });
+    },
+    AdicionarItemProdutoTabela: function (settings, tabela) {
+        var temEsseProduto = Portal.VerificaSeProdutoEstaNaTabela(tabela, $("#ProdutoId").val());
+        if (settings.$Formulario.valid() && !temEsseProduto) {
+            tabela.fnAddData(settings.ObterCamposPrincipais());
+            Portal.LimparCampos();
+            Portal.CalcularTotal(tabela);
+        } else if (temEsseProduto) {
+            Portal.PreencherAlertaAtencao("O produto selecionado já existe na lista", "#AlertaMensagens", true);
+        }
+    },
+    VerificaSeProdutoEstaNaTabela: function (tabela, produtoId) {
+        var produtos = tabela.fnGetData();
+        var temEsseProduto = _.some(produtos, function(produto) {
+            return produto.Codigo === produtoId;
+        });
+        return temEsseProduto;
+    },
+    EditarItemProdutoTabela: function (tdCorrete, settings) {
+        var tabela = $(settings.seletorTabela).dataTable();
+        var $tr = $(tdCorrete).closest("tr");
+        var obj = tabela.fnGetData($tr);
+        Portal.PreencherCamposModal(obj);
+        $(settings.seletorBotaoModalAtualizar).off("click").on("click", function () {
+            if ($(settings.seletorFormulario).valid()) {
+                $.extend(obj, Portal.ObterCamposModal(obj));
+                tabela.fnUpdate(obj, $tr[0]._DT_RowIndex);
+                Portal.CalcularTotal(tabela);
+                $(settings.seletorModal).modal("hide");
+            }
+        });
+    },
+    ExcluirItemProdutoTabela: function (tdCorrete, settings) {
+        var tabela = $(settings.seletorTabela).dataTable();
+        tabela.fnDeleteRow($(tdCorrete).closest("tr"));
+        Portal.CalcularTotal(tabela);
+    },
+    TabelaDinamica: function(settings) {
+        var tabela = Portal.EstruturaTabelaDinamica(settings);
         Portal.PreencherTabelaDinamica(settings, tabela);
-
         $(settings.AdicionaLinhaSeletor).on("click", function() {
             Portal.AdicionarItemTabelaDinamica(settings, tabela);
         });
     },
-    PreencherTabelaDinamica: function(settings, tabela) {
-        $.ajax({
-            url: settings.UrlLista,
-            type: "GET",
-            traditional: true
-        }).success(function(data) {
-            if (data.ObjetoRetorno.length) {
-                tabela.fnAddData(data.ObjetoRetorno);
-            }
-        }).error(function(ex) {
-            Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens");
-        });
+    PreencherTabelaDinamica: function (settings, tabela) {
+        if (settings.UrlLista !== undefined) {
+            $.ajax({
+                url: settings.UrlLista,
+                type: "GET",
+                traditional: true
+            }).success(function (data) {
+                if (data.ObjetoRetorno.length) {
+                    tabela.fnAddData(data.ObjetoRetorno);
+                }
+            }).error(function (ex) {
+                Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens", true);
+            });
+        }
     },
     AdicionarItemTabelaDinamica: function(settings, tabela) {
         var formularioDados = settings.$Formulario.serializeArray();
@@ -209,15 +260,15 @@
                 traditional: true
             }).success(function (data) {
                 if (data.TemErros) {
-                    Portal.PreencherAlertaErros(data.Mensagem, "#AlertaMensagens");
+                    Portal.PreencherAlertaErros(data.Mensagem, "#AlertaMensagens", true);
                 } else if (data.ObjetoRetorno != null && data.ObjetoRetorno !== undefined) {
                     Portal.LimparCampos.call(this, data);
                     Portal.LimparAlertar("#AlertaMensagens");
-                    Portal.PreencherAlertaSucesso(data.Mensagem, "#AlertaMensagens");
+                    Portal.PreencherAlertaSucesso(data.Mensagem, "#AlertaMensagens", true);
                     tabela.fnAddData(data.ObjetoRetorno);
                 }
             }).error(function(ex) {
-                Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens");
+                Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens", true);
             });
         }
     },
@@ -238,15 +289,15 @@
                     traditional: true
                 }).success(function (data) {
                     if (data.TemErros) {
-                        Portal.PreencherAlertaErros(data.Mensagem, "#AlertaMensagens");
+                        Portal.PreencherAlertaErros(data.Mensagem, "#AlertaMensagens", true);
                     } else if (data.ObjetoRetorno != null && data.ObjetoRetorno !== undefined) {
                         Portal.LimparAlertar("#AlertaMensagens");
-                        Portal.PreencherAlertaSucesso(data.Mensagem, "#AlertaMensagens");
+                        Portal.PreencherAlertaSucesso(data.Mensagem, "#AlertaMensagens", true);
                         tabela.fnUpdate(data.ObjetoRetorno, $tr[0]._DT_RowIndex);
                         $(settings.seletorModal).modal("hide");
                     }
                 }).error(function(ex) {
-                    Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens");
+                    Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens", true);
                 });
             }
         });
@@ -258,17 +309,19 @@
             type: "POST"
         }).success(function (ret) {
             if (ret.TemErros) {
-                Portal.PreencherAlertaErros(ret.Mensagem, "#AlertaMensagens");
+                Portal.PreencherAlertaErros(ret.Mensagem, "#AlertaMensagens", true);
             } else {
                 Portal.LimparAlertar("#AlertaMensagens");
-                Portal.PreencherAlertaSucesso(ret.Mensagem, "#AlertaMensagens");
+                Portal.PreencherAlertaSucesso(ret.Mensagem, "#AlertaMensagens", true);
                 var tabela = $(settings.seletorTabela).dataTable();
                 tabela.fnDeleteRow($(tdCorrete).closest("tr"));
             }
         }).error(function (ex) {
-            Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens");
+            Portal.PreencherAlertaErros(ex.responseJSON.message, "#AlertaMensagens", true);
         });
     },
     LimparCampos: function() {},
-    PreencherCamposModal: function() {}
+    PreencherCamposModal: function () {},
+    ObterCamposModal: function () {},
+    CalcularTotal: function() {}
 });

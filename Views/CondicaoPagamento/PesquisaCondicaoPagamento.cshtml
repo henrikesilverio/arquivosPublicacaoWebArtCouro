@@ -13,22 +13,24 @@
         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
     </header>
     <div role="content">
-        <div id="AlertaMensagens" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding"></div>
         <div class="widget-body no-padding">
             <form id="formCondicaoPagamento" class="smart-form" novalidate="novalidate">
                 <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="row">
+                        <section id="AlertaMensagens" class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 no-margin"></section>
+                    </div>
+                    <div class="row">
                         <section class="col col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             @Html.LabelFor(m => m.Descricao, new { @class = "label" })
                             <label class="input">
-                                @Html.TextBoxFor(m => m.Descricao, new { placeholder = @Mensagens.Description, maxlength = 30 })
+                                @Html.TextBoxFor(m => m.Descricao, new { placeholder = @Mensagens.Description, maxlength = 50 })
                             </label>
                             @Html.ValidationMessageFor(m => m.Descricao)
                         </section>
                         <section class="col col-xs-12 col-sm-3 col-md-3 col-lg-3">
                             @Html.LabelFor(m => m.QuantidadeParcelas, new { @class = "label" })
                             <label class="input">
-                                @Html.TextBoxFor(m => m.QuantidadeParcelas, new { placeholder = @Mensagens.QuantityOfParcels })
+                                @Html.TextBoxFor(m => m.QuantidadeParcelas, new { placeholder = @Mensagens.QuantityOfParcels, @class = "SomenteDoisDigitos" })
                             </label>
                             @Html.ValidationMessageFor(m => m.QuantidadeParcelas)
                         </section>
@@ -49,8 +51,8 @@
                     </div>
                 </fieldset>
                 <footer>
-                    <a id="AdicionarCondicaoPagamento" class="btn btn-primary" href="javascript:void(0);">
-                        <i class="fa fa-plus"></i> @Mensagens.Add
+                    <a id="AdicionarCondicaoPagamento" class="btn btn-labeled btn-primary" href="javascript:void(0);">
+                        <span class="btn-label"><i class="fa fa-plus"></i></span> @Mensagens.Add
                     </a>
                 </footer>
             </form>
@@ -62,7 +64,7 @@
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                         <h2>Tabela de Condições de Pagamento</h2>
                     </header>
-                    <div>
+                    <div class="ScrollTableContent">
                         <div class="widget-body no-padding">
                             <table id="datatableCondicaoPagamento" class="table table-striped table-bordered table-hover" width="100%"></table>
                         </div>
@@ -100,7 +102,7 @@
                     "sTitle": "@(Mensagens.Active)",
                     "mData": null,
                     "sWidth": "15%",
-                    "mRender": function(obj) {
+                    "mRender": function (obj) {
                         return obj.Ativo ? "Sim" : "Não";
                     }
                 },
@@ -110,7 +112,7 @@
                     "sClass": "center",
                     "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function(obj) {
+                    "mRender": function (obj) {
                         var settings = JSON.stringify({
                             "objetoAdicional": { "name": "CondicaoPagamentoCodigo", "value": obj.CondicaoPagamentoCodigo },
                             "objetoExcluir": { "codigoCondicaoPagamento": obj.CondicaoPagamentoCodigo },
@@ -135,7 +137,7 @@
             $("#Ativo").closest(".inline-group").find(":checked")[0].checked = false;
             $("#QuantidadeParcelas").val("");
         }
-        Portal.PreencherCamposModal = function(obj) {
+        Portal.PreencherCamposModal = function (obj) {
             $("#ModalCondicaoPagamentoDescricao").val(obj["Descricao"]);
             $("#ModalCondicaoPagamentoAtivo").closest(".inline-group").find("input[value=" + obj["Ativo"].toString().capitalize() + "]")[0].checked = true;
             $("#ModalCondicaoPagamentoQuantidadeParcelas").val(obj["QuantidadeParcelas"]);

@@ -15,10 +15,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/css/site.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/demo.css">
     <link rel="stylesheet" type="text/css" media="screen" href="~/css/fullcalendar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/css/introjs.css" rel="stylesheet" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 </head>
-
-
 
 @if (Request.IsAuthenticated)
 {
@@ -27,8 +26,13 @@
         <span class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Por favor, aguarde...</span>
     </div>
         @Html.Partial("_ModalProduto")
+        @Html.Partial("_ModalItemProdutoVenda")
+        @Html.Partial("_ModalItemProdutoCompra")
+        @Html.Partial("_ModalEfetuarVenda")
+        @Html.Partial("_ModalEfetuarCompra")
         @Html.Partial("_ModalCondicaoPagamento")
         @Html.Partial("_ModalFormaPagamento")
+        @Html.Partial("_ModalConfirmacao")
         <header id="header">
             <div id="logo-group">
                 <span id="logo"> <img src="/img/logoartcouro.png" alt="SmartAdmin"> </span>
@@ -130,12 +134,6 @@ else
 <!-- CUSTOM NOTIFICATION -->
 <script src="/js/notification/SmartNotification.min.js"></script>
 
-<!-- JARVIS WIDGETS -->
-@*<script src="/js/smartwidgets/jarvis.widget.min.js"></script>*@
-
-<!-- SPARKLINES -->
-@*<script src="/js/plugin/sparkline/jquery.sparkline.min.js"></script>*@
-
 <!-- JQUERY VALIDATE -->
 <script src="/js/plugin/jquery-validate/jquery.validate.min.js"></script>
 
@@ -151,14 +149,6 @@ else
 <!-- JQUERY SELECT2 INPUT -->
 <script src="/js/plugin/select2/select2.min.js"></script>
 
-<!-- JQUERY UI + Bootstrap Slider -->
-@*<script src="/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>*@
-
-<!-- SmartClick: For mobile devices -->
-@*<script src="/js/plugin/smartclick/smartclick.js"></script>*@
-
-@*<script src="~/js/plugin/flot/jquery.flot.cust.js"></script>*@
-
 <!-- DataTable -->
 <script src="~/js/plugin/datatables/jquery.dataTables.min.js"></script>
 <script src="~/js/plugin/datatables/dataTables.colVis.min.js"></script>
@@ -168,6 +158,9 @@ else
 
 <!-- Underscore -->
 <script src="~/js/plugin/underscore/underscore-min.js"></script>
+
+<!-- Intro -->
+<script src="~/js/plugin/intro/intro.min.js"></script>
 
 <!--[if IE 7]>
         <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>

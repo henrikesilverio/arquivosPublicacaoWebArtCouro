@@ -2,7 +2,6 @@
 @using ProjetoArtCouro.Resource.Resources
 @using ProjetoArtCouro.Web.Infra.Extensions
 
-
 <div class="jarviswidget jarviswidget-sortable"
      data-widget-editbutton="true" data-widget-colorbutton="true"
      data-widget-fullscreenbutton="true" data-widget-collapsed="true"
@@ -12,12 +11,21 @@
         <span class="widget-icon"><i class="fa fa-edit"></i></span>
         <h2>@Mensagens.SearchBuy </h2>
         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+        <div class="widget-toolbar">
+            <div class="btn-group help">
+                <a href="javascript:void(0);" id="Ajuda" class="button-icon" rel="tooltip" title="" data-placement="left" data-original-title="Ajuda">
+                    <i class="fa fa-2x fa-question-circle"></i>
+                </a>
+            </div>
+        </div>
     </header>
     <div role="content">
-        <div id="AlertaMensagens" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding"></div>
         <div class="widget-body no-padding">
             <form id="formPesquisaCompra" class="smart-form" novalidate="novalidate">
                 <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <section id="AlertaMensagens" class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 no-margin"></section>
+                    </div>
                     <div class="row">
                         <section class="col col-xs-12 col-sm-3 col-md-3 col-lg-3">
                             @Html.LabelFor(m => m.CodigoCompra, new { @class = "label" })
@@ -56,17 +64,17 @@
                         <section class="col col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             @Html.LabelFor(m => m.CPFCNPJ, new { @class = "label" })
                             <label class="input">
-                                @Html.TextBoxFor(m => m.CPFCNPJ, new { placeholder = @Mensagens.CPFCNPJ })
+                                @Html.TextBoxFor(m => m.CPFCNPJ, new { placeholder = @Mensagens.CPFCNPJ, @class = "CpfCnpjMask" })
                             </label>
                         </section>
                     </div>
                 </fieldset>
                 <footer>
-                    <a id="PesquisarCompra" class="btn btn-primary" href="javascript:void(0);">
-                        <i class="fa fa-search"></i> @Mensagens.Research
+                    <a id="PesquisarCompra" class="btn btn-labeled btn-primary" href="javascript:void(0);">
+                        <span class="btn-label"><i class="fa fa-search"></i></span> @Mensagens.Research
                     </a>
-                    <a id="NovaCompra" class="btn btn-success" href="@Url.Action("NovaCompra", "Compra")">
-                        <i class="fa fa-file-o"></i> @Mensagens.New
+                    <a id="NovaCompra" class="btn btn-labeled btn-success" href="@Url.Action("NovaCompra", "Compra")">
+                        <span class="btn-label"><i class="fa fa-file-o"></i></span> @Mensagens.New
                     </a>
                 </footer>
             </form>
@@ -78,7 +86,7 @@
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                         <h2>Tabela de Compras</h2>
                     </header>
-                    <div>
+                    <div class="ScrollTableContent">
                         <div class="widget-body no-padding">
                             <table id="datatableCompra" class="table table-striped table-bordered table-hover" width="100%"></table>
                         </div>
@@ -91,12 +99,9 @@
 
 @section Scripts{
     <script src="~/js/app/Search.js"></script>
+    <script src="~/js/app/Compra/Compra.js"></script>
     <script>
         Portal.Mask();
-        Portal.Form({
-            Button: $("#Salvar"),
-            Form: $("#smart-form-register")
-        });
         Portal.Search({
             AlertaMensagensSeletor: "#AlertaMensagens",
             BotaoPesquisarSeletor: "#PesquisarCompra",
@@ -104,38 +109,52 @@
             UrlDados: "@Url.Action("PesquisaCompra", "Compra")",
             TabelaSeletor: "#datatableCompra",
             WidgetSeletor: ".WidgetCompra",
-            TituloRodape: "",
-            InformacaoTabela: "",
+            TituloRodape: "Compras",
+            InformacaoTabela: "Informe os filtros para pesquisar",
+            TituloRodapeContador: "Nenhuma compra",
             OrdenacaoDoCabecalho: [
-                { "sTitle": "@(Mensagens.SaleCode)", "mData": "CodigoCompra", "sWidth": "10%" },
-                { "sTitle": "@(Mensagens.ClientCode)", "mData": "FornecedorId", "sWidth": "30%" },
+                { "sTitle": "@(Mensagens.CodeBuy)", "mData": "CodigoCompra", "sWidth": "10%" },
                 {
-                    "sTitle": "@(Mensagens.RegistrationDate)",
+                    "sTitle": "@(Mensagens.ProviderCode)",
                     "mData": null,
-                    "sWidth": "20%",
+                    "sWidth": "10%",
                     "mRender": function (obj) {
-                        var milesegundos = parseInt(obj.DataCadastro.replace(/[^\d]/g, ""));
-                        var data = new Date(milesegundos);
-                        return Portal.ConverteData(data);
+                        return obj.FornecedorId == null ? "N/I" : obj.FornecedorId;
                     }
                 },
-                { "sTitle": "@(Mensagens.Status)", "mData": "Status", "sWidth": "10%" },
-                { "sTitle": "@(Mensagens.ClientName)", "mData": "NomeFornecedor", "sWidth": "10%" },
-                { "sTitle": "@(Mensagens.CPFCNPJ)", "mData": "CPFCNPJ", "sWidth": "10%" },
+                {
+                    "sTitle": "@(Mensagens.ProviderName)",
+                    "mData": null,
+                    "sWidth": "40%",
+                    "mRender": function (obj) {
+                        return obj.NomeFornecedor == null ? "N/I" : obj.NomeFornecedor;
+                    }
+                },
+                {
+                    "sTitle": "@(Mensagens.CPFCNPJ)",
+                    "mData": null,
+                    "sWidth": "10%",
+                    "mRender": function (obj) {
+                        return obj.CPFCNPJ == null ? "N/I" : obj.CPFCNPJ;
+                    }
+                },
+                { "sTitle": "@(Mensagens.RegistrationDate)", "mData": "DataCadastro", "sWidth": "10%" },
+                { "sTitle": "@(Mensagens.Status)", "mData": "StatusCompra", "sWidth": "10%" },
                 {
                     "sTitle": "@(Mensagens.Actions)",
                     "mData": null,
                     "sClass": "center",
                     "bSortable": false,
                     "sWidth": "10%",
-                    "mRender": function(obj) {
-                        var url = "Compra/EditarCompra" + "?codigoCompra=" + obj.CodigoCompra;
+                    "mRender": function (obj) {
+                        var url = "/Compra/EditarCompra" + "?codigoCompra=" + obj.CodigoCompra;
                         var botoes = Portal.CriarBotoes(url,
-                            "Portal.RequisicaoDeletarLinha(\"Compra/ExcluirCompra\",{CodigoCompra:" + obj.CodigoCompra + "}, \"#datatableCompra\", $(this).closest(\"tr\"))");
+                            "Portal.ExcluirCompra(\"/Compra/ExcluirCompra\",{CodigoCompra: " + obj.CodigoCompra + ", StatusCompra: '" + obj.StatusCompra + "'}, \"#datatableCompra\", $(this).closest(\"tr\"))");
                         return botoes[0].outerHTML;
                     }
                 }
             ]
         });
+        Portal.HabilitarAjudaPesquisaCompra();
     </script>
 }

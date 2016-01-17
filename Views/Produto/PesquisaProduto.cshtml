@@ -14,10 +14,12 @@
         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
     </header>
     <div role="content">
-        <div id="AlertaMensagens" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding"></div>
         <div class="widget-body no-padding">
             <form id="formProduto" class="smart-form" novalidate="novalidate">
                 <fieldset class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <section id="AlertaMensagens" class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 no-margin"></section>
+                    </div>
                     <div class="row">
                         <section class="col col-xs-12 col-sm-8 col-md-8 col-lg-8">
                             @Html.LabelFor(m => m.Descricao, new { @class = "label" })
@@ -54,8 +56,8 @@
                     </div>
                 </fieldset>
                 <footer>
-                    <a id="AdicionarProduto" class="btn btn-primary" href="javascript:void(0);">
-                        <i class="fa fa-plus"></i> @Mensagens.Add
+                    <a id="AdicionarProduto" class="btn btn-labeled btn-primary" href="javascript:void(0);">
+                        <span class="btn-label"><i class="fa fa-plus"></i></span> @Mensagens.Add
                     </a>
                 </footer>
             </form>
@@ -67,7 +69,7 @@
                         <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                         <h2>Tabela de Produtos</h2>
                     </header>
-                    <div>
+                    <div class="ScrollTableContent">
                         <div class="widget-body no-padding">
                             <table id="datatableProduto" class="table table-striped table-bordered table-hover" width="100%"></table>
                         </div>
@@ -109,7 +111,7 @@
                     "sClass": "center",
                     "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function(obj) {
+                    "mRender": function (obj) {
                         var settings = JSON.stringify({
                             "objetoAdicional": { "name": "ProdutoCodigo", "value": obj.ProdutoCodigo },
                             "objetoExcluir": { "codigoProduto": obj.ProdutoCodigo },
@@ -135,7 +137,7 @@
             $("#PrecoCusto").val("");
             $("#PrecoVenda").val("");
         }
-        Portal.PreencherCamposModal = function(obj) {
+        Portal.PreencherCamposModal = function (obj) {
             $("#ModalProdutoDescricao").val(obj["Descricao"]);
             $("#ModalProdutoUnidadeId").val(obj["UnidadeId"]);
             $("#ModalProdutoPrecoCusto").val(obj["PrecoCusto"].replace(/[a-zA-Z][$]/g, "").trim());
