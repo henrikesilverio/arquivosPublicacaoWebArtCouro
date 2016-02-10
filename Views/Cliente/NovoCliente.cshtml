@@ -1,0 +1,16 @@
+﻿@model  ProjetoArtCouro.Model.Models.Cliente.ClienteModel
+
+@Html.Partial("_ClienteView", Model)
+
+@section Scripts{
+    <script src="~/js/app/Cliente/Cliente.js"></script>
+    <script>
+        Portal.Mask();
+        Portal.NovoCliente({
+            AlertaMensagensSeletor: "#AlertaMensagens",
+            UrlDados: "@Url.Action("NovoCliente", "Cliente")",
+            $BotaoSalvar: $("#SalvarCliente"),
+            $Formulario: $("#formularioCliente")
+        });
+    </script>
+}
